@@ -54,7 +54,7 @@ function createCardBox(sprite, id, size) {
     return `
     <div id="test" class="cardBox m-2 d-flex justify-content-center align-items-center" data-pkmn="${id}">
     <img style="height: ${size}" src="${sprite}" class="front-face">
-    <img style="height: ${size}" src="../assets/images/pokeball.png" class="back-face">
+    <img style="height: ${size}" src="images/pokeball.png" class="back-face">
     </div>
     `;
 }
