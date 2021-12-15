@@ -98,10 +98,7 @@ function backToStart() {
     document.getElementById("settings").style.display = "none";
     document.getElementById("buttons").style.display = "flex";
     document.getElementById("title").style.display = "none";
-    document.getElementById("counterText").style.display = "none";
-    document.getElementById("timerText").style.display = "none";
     document.getElementById("counters").style.display = "none";
-    document.getElementById("counter").style.display = "none";
     document.getElementById("counter").dataset.count = "0";
     document.getElementById("counter").innerText = document.getElementById("counter").dataset.count;
     document.getElementById("pageTitle").classList.add("mt-5");
