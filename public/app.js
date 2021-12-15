@@ -100,14 +100,13 @@ function backToStart() {
     document.getElementById("title").style.display = "none";
     document.getElementById("counterText").style.display = "none";
     document.getElementById("timerText").style.display = "none";
-    document.getElementById("counterText").innerHTML = ``; // tirar
-    document.getElementById("timerText").innerHTML = ``; // tirar
     document.getElementById("counters").style.display = "none";
     document.getElementById("counter").style.display = "none";
     document.getElementById("counter").dataset.count = "0";
     document.getElementById("counter").innerText = document.getElementById("counter").dataset.count;
     document.getElementById("pageTitle").classList.add("mt-5");
     document.getElementById("leaderboardContainer").style.display = "none";
+    document.getElementById("leaderboardSortButtons").style.display = "none";
     document.getElementById("leaderboardEasy").style.display = "none";
     document.getElementById("leaderboardNormal").style.display = "none";
     document.getElementById("leaderboardHard").style.display = "none";
