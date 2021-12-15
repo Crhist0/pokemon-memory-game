@@ -100,6 +100,8 @@ function backToStart() {
     document.getElementById("title").style.display = "none";
     document.getElementById("counterText").style.display = "none";
     document.getElementById("timerText").style.display = "none";
+    document.getElementById("counterText").innerHTML = ``; // tirar
+    document.getElementById("timerText").innerHTML = ``; // tirar
     document.getElementById("counters").style.display = "none";
     document.getElementById("counter").style.display = "none";
     document.getElementById("counter").dataset.count = "0";
