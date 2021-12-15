@@ -99,9 +99,7 @@ function backToStart() {
     document.getElementById("buttons").style.display = "flex";
     document.getElementById("title").style.display = "none";
     document.getElementById("counterText").style.display = "none";
-    document.getElementById("counterText").innerHTML = `Contador: <span id="counter" class="h4 ms-2"data-count="0"></span>`;
     document.getElementById("timerText").style.display = "none";
-    document.getElementById("timerText").innerHTML = `Contador: <span id="counter" class="h4 ms-2"data-count="0"></span>`;
     document.getElementById("counters").style.display = "none";
     document.getElementById("counter").style.display = "none";
     document.getElementById("counter").dataset.count = "0";
@@ -190,7 +188,7 @@ function populatePlayArea() {
     document.getElementById("counters").style.display = "block";
     document.getElementById("counterText").style.display = "inherit";
     document.getElementById("counterText").style.height = "auto";
-    document.getElementById("counterText").innerHTML = `Contador: <span id="counter" class="h4 ms-1"data-count="0">  </span>`;
+    document.getElementById("counterText").innerHTML = `Counter: <span id="counter" class="h4 ms-1"data-count="0">  </span>`;
     document.getElementById("timerText").style.display = "inherit";
     document.getElementById("timerText").style.height = "auto";
     document.getElementById("timerText").innerHTML = `Timer: <span id="timerMinutes" class="h4 ms-1">00</span>:<span id="timerSeconds" class="h4">00</span>`;
