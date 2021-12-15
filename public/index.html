@@ -155,6 +155,10 @@
         .btn-check:checked+.btn-outline-dark {
             background-color: #003049;
         }
+
+        .border-right {
+            border-right: solid 1px white;
+        }
     </style>
 
 </head>
@@ -166,7 +170,7 @@
         <div id="pageTitle" class="container mt-3 mt-5 text-center">
             <div class="row">
                 <div class="col d-flex justify-content-around align-items-center">
-                    <div>
+                    <div id="counters" style="display: none;">
                         <span id="counterText" class="h4" style="display: none; "></span>
                         <span id="timerText" class="h4" style="display: none; "></span>
                     </div>
@@ -229,13 +233,13 @@
                     tempo</button>
             </div>
             <div class="row d-flex justify-content-around align-items-center" id="leaderboard" style="width: 100%">
-                <div class="col-3 text-center">
+                <div class="col-3 text-center border-right">
                     <div id="leaderboardEasy" style="display: none;"></div>
                 </div>
-                <div class="col-3 text-center">
+                <div class="col-3 text-center border-right">
                     <div id="leaderboardNormal" style="display: none;"></div>
                 </div>
-                <div class="col-3 text-center">
+                <div class="col-3 text-center border-right">
                     <div id="leaderboardHard" style="display: none;"></div>
                 </div>
                 <div class="col-3 text-center">

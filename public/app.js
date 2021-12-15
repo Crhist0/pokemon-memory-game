@@ -185,6 +185,7 @@ function populatePlayArea() {
     document.getElementById("buttons").style.display = "none";
     document.getElementById("pageTitle").classList.toggle("mt-5");
     document.getElementById("title").innerHTML = createBackButton(); // cria o botão de retorno
+    document.getElementById("counters").style.display = "inherit";
     document.getElementById("counterText").style.display = "inherit";
     document.getElementById("counterText").style.height = "auto";
     document.getElementById("counterText").innerHTML = `Contador: <span id="counter" class="h4 ms-1"data-count="0">  </span>`;
