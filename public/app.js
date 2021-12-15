@@ -3,6 +3,11 @@ const api = axios.create({
     baseURL: "https://pokeapi.co/api/v2",
 });
 
+// instanciar a database
+const db = axios.create({
+    baseURL: "https://pokemon-memory-game-ranking.herokuapp.com",
+});
+
 // função para fazer as chamadas da api do pokemon, popular o playArea, e randomizar as cartas
 function getPokemonSprite(id) {
     api.get(`/pokemon/${id}`)
@@ -94,7 +99,9 @@ function backToStart() {
     document.getElementById("buttons").style.display = "flex";
     document.getElementById("title").style.display = "none";
     document.getElementById("counterText").style.display = "none";
-    document.getElementById("counterText").innerHTML = `Contador: <span id="counter" class="h4"data-count="0"></span>`;
+    document.getElementById("counterText").innerHTML = `Contador: <span id="counter" class="h4 ms-2"data-count="0"></span>`;
+    document.getElementById("timerText").style.display = "none";
+    document.getElementById("timerText").innerHTML = `Contador: <span id="counter" class="h4 ms-2"data-count="0"></span>`;
     document.getElementById("counter").style.display = "none";
     document.getElementById("counter").dataset.count = "0";
     document.getElementById("counter").innerText = document.getElementById("counter").dataset.count;
@@ -109,6 +116,7 @@ function backToStart() {
     document.getElementById("leaderboardHard").innerText = "";
     document.getElementById("leaderboardBrasil").innerText = "";
     document.getElementById("titleText").style.fontSize = "4rem";
+    stopTimer();
 
     progress = 0;
     hasFlippedCard = false;
@@ -121,8 +129,53 @@ function goToSettings() {
     document.getElementById("title").style.display = "block";
     document.getElementById("pageTitle").classList.toggle("mt-5");
     document.getElementById("counterText").style.display = "block";
+    document.getElementById("timerText").style.display = "block";
     document.getElementById("counterText").innerHTML = "<img src='https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/shiny/25.png'>";
     document.getElementById("counterText").style.height = "140px";
+}
+
+// função timer
+let minutes = 0;
+let seconds = 0;
+let second = 1000;
+let cron;
+function startTimer() {
+    cron = setInterval(() => {
+        timer();
+    }, second);
+}
+
+function stopTimer() {
+    clearInterval(cron);
+    minutes = 0;
+    seconds = 0;
+}
+
+function pauseTimer() {
+    clearInterval(cron);
+}
+
+function timer() {
+    if (seconds < 59) {
+        seconds++;
+        if (seconds.toString().length < 2) {
+            document.getElementById("timerSeconds").innerText = `0${seconds}`;
+        } else {
+            document.getElementById("timerSeconds").innerText = seconds;
+        }
+        return;
+    } else {
+        minutes++;
+        seconds = 0;
+        if (minutes.toString().length < 2) {
+            document.getElementById("timerSeconds").innerText = `00`;
+            document.getElementById("timerMinutes").innerText = `0${minutes}`;
+        } else {
+            document.getElementById("timerSeconds").innerText = `00`;
+            document.getElementById("timerMinutes").innerText = minutes;
+        }
+        return;
+    }
 }
 
 // função que cria os pares de cartas
@@ -134,7 +187,10 @@ function populatePlayArea() {
     document.getElementById("title").innerHTML = createBackButton(); // cria o botão de retorno
     document.getElementById("counterText").style.display = "inherit";
     document.getElementById("counterText").style.height = "auto";
-    document.getElementById("counterText").innerHTML = `Contador: <span id="counter" class="h4"data-count="0"></span>`;
+    document.getElementById("counterText").innerHTML = `Contador: <span id="counter" class="h4 ms-1"data-count="0">  </span>`;
+    document.getElementById("timerText").style.display = "inherit";
+    document.getElementById("timerText").style.height = "auto";
+    document.getElementById("timerText").innerHTML = `Timer: <span id="timerMinutes" class="h4 ms-1">00</span>:<span id="timerSeconds" class="h4">00</span>`;
     document.getElementById("counter").style.display = "inline";
     document.getElementById("title").style.display = "block";
     document.getElementById("titleText").style.fontSize = "2.5rem";
@@ -153,6 +209,7 @@ function populatePlayArea() {
         index++;
     }
     console.log(pkmnsSorteados);
+    startTimer();
 }
 
 // função que ativa o efeito "flip", guarda a carta escolhida e ativa a checagem das cartas
@@ -189,10 +246,11 @@ function disableCards() {
     secondCard.removeEventListener("click", flipCard);
     progress++;
     if (progress == goal) {
+        pauseTimer();
         Swal.fire({
             title: "Parabéns!",
             // text: `Você completou em ${document.getElementById("counter").dataset.count} jogadas.`,
-            html: `Você completou em ${document.getElementById("counter").dataset.count} jogadas.
+            html: `Você completou em ${document.getElementById("counter").dataset.count} jogadas e levou ${minutes} minutos e ${seconds} segundos.
             <br>
             <br>
             Para salvar sua pontuação no ranking, informe um apelido:
@@ -223,21 +281,29 @@ function disableCards() {
                 let name = document.getElementById("nick").value;
                 let count = document.getElementById("counter").dataset.count;
                 let now = new Date();
-                let data = `${now.getDate()}/${now.getMonth()}/${now.getFullYear()}`;
+                let date = `${now.getDate()}/${now.getMonth()}/${now.getFullYear()}`;
+                let time = minutes * 60 + seconds;
+
+                // gameDifficulty
+                // easy 6
+                // normal 14
+                // hard 30
+                // very hard 52
+
                 let player = {
                     name,
                     count,
-                    data,
+                    time,
+                    date,
+                    difficulty: goal,
                 };
-                if (goal == 6) {
-                    databaseEasy.push(player);
-                } else if (goal == 14) {
-                    databaseNormal.push(player);
-                } else if (goal == 30) {
-                    databaseHard.push(player);
-                } else if (goal == 52) {
-                    databaseBrasil.push(player);
-                }
+
+                db.post("/", player)
+                    .then((result) => {
+                        console.log(result.data.message);
+                    })
+                    .catch((err) => console.log({ err }));
+
                 backToStart();
             }
         });
@@ -259,8 +325,8 @@ function getRandomInt(min, max) {
 }
 
 // função para mostrar o leaderboard
-function showLeaderboard() {
-    document.getElementById("leaderboardContainer").style.display = "block";
+function showLeaderboard(x) {
+    document.getElementById("leaderboardContainer").style.display = "flex";
     document.getElementById("leaderboardEasy").style.display = "block";
     document.getElementById("leaderboardNormal").style.display = "block";
     document.getElementById("leaderboardHard").style.display = "block";
@@ -274,51 +340,106 @@ function showLeaderboard() {
     document.getElementById("counterText").innerHTML = "<img src='https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/shiny/25.png'>";
     document.getElementById("counterText").style.height = "140px";
 
-    // sorting por ponto
-    databaseEasy.sort((playera, playerb) => {
-        return playera.count - playerb.count;
-    });
-    databaseNormal.sort((playera, playerb) => {
-        return playera.count - playerb.count;
-    });
-    databaseHard.sort((playera, playerb) => {
-        return playera.count - playerb.count;
-    });
-    databaseBrasil.sort((playera, playerb) => {
-        return playera.count - playerb.count;
-    });
+    printTopLeaderboard();
+    if (x == 1) {
+        db.get("/listByTime").then((result) => list(result));
+    } else {
+        db.get("/listByPlays").then((result) => list(result));
+    }
+}
 
-    document.getElementById("leaderboardEasy").innerHTML += `<p class="textFuzz">Easy</p><p>Rank - Apelido - Jogadas - Data</p>`;
-    document.getElementById("leaderboardNormal").innerHTML += `<p class="textFuzz">Normal</p><p>Rank - Apelido - Jogadas - Data</p>`;
-    document.getElementById("leaderboardHard").innerHTML += `<p class="textFuzz">Hard</p><p>Rank - Apelido - Jogadas - Data</p>`;
-    document.getElementById("leaderboardBrasil").innerHTML += `<p class="textFuzz">Very hard</p><p>Rank - Apelido - Jogadas - Data</p>`;
+function printTopLeaderboard() {
+    document.getElementById("leaderboardEasy").innerHTML = `<p class="textFuzz">Easy</p><p>Rank - Apelido - Data - Jogadas - Tempo</p>`;
+    document.getElementById("leaderboardNormal").innerHTML = `<p class="textFuzz">Normal</p><p>Rank - Apelido - Data - Jogadas - Tempo</p>`;
+    document.getElementById("leaderboardHard").innerHTML = `<p class="textFuzz">Hard</p><p>Rank - Apelido - Data - Jogadas - Tempo</p>`;
+    document.getElementById("leaderboardBrasil").innerHTML = `<p class="textFuzz">Very hard</p><p>Rank - Apelido - Data - Jogadas - Tempo</p>`;
+}
+
+function list(result) {
+    let databaseEasy = [];
+    let databaseNormal = [];
+    let databaseHard = [];
+    let databaseBrasil = [];
+
+    for (const player of result.data.data) {
+        if (player.difficulty == 6) {
+            databaseEasy.push(player);
+        } else if (player.difficulty == 14) {
+            databaseNormal.push(player);
+        } else if (player.difficulty == 30) {
+            databaseHard.push(player);
+        } else {
+            databaseBrasil.push(player);
+        }
+    }
+
     for (let index = 0; index < databaseEasy.length; index++) {
         const playerEasy = databaseEasy[index];
         document.getElementById("leaderboardEasy").innerHTML += `
-        <p>${index + 1} - ${playerEasy.name} - ${playerEasy.count} - ${playerEasy.data}</p>
-        `;
+        <div class="d-flex align-items-center justify-content-evenly">
+            <p>${index + 1} -</p>
+            <p>${playerEasy.name} -</p>
+            <p>${playerEasy.date} -</p>
+            <p>${playerEasy.count} -</p>
+            <p>${showTime(playerEasy.time)}</p>
+        </div>
+            `;
         if (index == 14) break;
     }
+
     for (let index = 0; index < databaseNormal.length; index++) {
         const playerNormal = databaseNormal[index];
         document.getElementById("leaderboardNormal").innerHTML += `
-        <p>${index + 1} - ${playerNormal.name} - ${playerNormal.count} - ${playerNormal.data}</p>
-        `;
+        <div class="d-flex align-items-center justify-content-evenly">
+            <p>${index + 1} -</p>
+            <p>${playerNormal.name} -</p>
+            <p>${playerNormal.date} -</p>
+            <p>${playerNormal.count} -</p>
+            <p>${showTime(playerNormal.time)}</p>
+        </div>
+            `;
         if (index == 14) break;
     }
+
     for (let index = 0; index < databaseHard.length; index++) {
         const playerHard = databaseHard[index];
         document.getElementById("leaderboardHard").innerHTML += `
-        <p>${index + 1} - ${playerHard.name} - ${playerHard.count} - ${playerHard.data}</p>
-        `;
+        <div class="d-flex align-items-center justify-content-evenly">
+            <p>${index + 1} -</p>
+            <p>${playerHard.name} -</p>
+            <p>${playerHard.date} -</p>
+            <p>${playerHard.count} -</p>
+            <p>${showTime(playerHard.time)}</p>
+        </div>
+            `;
         if (index == 14) break;
     }
+
     for (let index = 0; index < databaseBrasil.length; index++) {
         const playerBrasil = databaseBrasil[index];
         document.getElementById("leaderboardBrasil").innerHTML += `
-        <p>${index + 1} - ${playerBrasil.name} - ${playerBrasil.count} - ${playerBrasil.data}</p>
+        <div class="d-flex align-items-center justify-content-evenly">
+            <p>${index + 1} -</p>
+            <p>${playerBrasil.name} -</p>
+            <p>${playerBrasil.date} -</p>
+            <p>${playerBrasil.count} -</p>
+            <p>${showTime(playerBrasil.time)}</p>
+        </div>
         `;
         if (index == 14) break;
+    }
+}
+
+function showTime(timeInSeconds) {
+    let hours = Math.floor(timeInSeconds / 3600);
+    let minutes = Math.floor(timeInSeconds / 60) - hours * 3600;
+    let seconds = timeInSeconds - hours * 3600 - minutes * 60;
+    if (hours >= 1) {
+        return `${hours}:${minutes}:${seconds}s`;
+    } else if (minutes >= 1) {
+        return `${minutes}:${seconds}s`;
+    } else {
+        return `${seconds}s`;
     }
 }
 
@@ -327,7 +448,3 @@ let firstCard, secondCard;
 let lockBoard = false;
 let progress = 0;
 let goal = 1;
-let databaseEasy = [];
-let databaseNormal = [];
-let databaseHard = [];
-let databaseBrasil = [];
