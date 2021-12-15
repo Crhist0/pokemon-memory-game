@@ -102,6 +102,7 @@ function backToStart() {
     document.getElementById("counterText").innerHTML = `Contador: <span id="counter" class="h4 ms-2"data-count="0"></span>`;
     document.getElementById("timerText").style.display = "none";
     document.getElementById("timerText").innerHTML = `Contador: <span id="counter" class="h4 ms-2"data-count="0"></span>`;
+    document.getElementById("counters").style.display = "none";
     document.getElementById("counter").style.display = "none";
     document.getElementById("counter").dataset.count = "0";
     document.getElementById("counter").innerText = document.getElementById("counter").dataset.count;
