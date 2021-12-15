@@ -106,7 +106,7 @@ function backToStart() {
     document.getElementById("counter").style.display = "none";
     document.getElementById("counter").dataset.count = "0";
     document.getElementById("counter").innerText = document.getElementById("counter").dataset.count;
-    document.getElementById("pageTitle").classList.toggle("mt-5");
+    document.getElementById("pageTitle").classList.add("mt-5");
     document.getElementById("leaderboardContainer").style.display = "none";
     document.getElementById("leaderboardEasy").style.display = "none";
     document.getElementById("leaderboardNormal").style.display = "none";
@@ -128,7 +128,7 @@ function goToSettings() {
     document.getElementById("buttons").style.display = "none";
     document.getElementById("title").innerHTML = createBackButton(); // cria o botão de retorno
     document.getElementById("title").style.display = "block";
-    document.getElementById("pageTitle").classList.toggle("mt-5");
+    document.getElementById("pageTitle").classList.remove("mt-5");
     document.getElementById("counterText").style.display = "block";
     document.getElementById("timerText").style.display = "none";
     document.getElementById("counters").style.display = "block";
@@ -185,7 +185,7 @@ function populatePlayArea() {
     document.getElementById("playArea").innerHTML = ""; // reseta a playarea porque sim
     document.getElementById("settings").style.display = "none"; // esconde as settings
     document.getElementById("buttons").style.display = "none";
-    document.getElementById("pageTitle").classList.toggle("mt-5");
+    document.getElementById("pageTitle").classList.remove("mt-5");
     document.getElementById("title").innerHTML = createBackButton(); // cria o botão de retorno
     document.getElementById("counters").style.display = "block";
     document.getElementById("counterText").style.display = "inherit";
@@ -338,7 +338,7 @@ function showLeaderboard(x) {
     document.getElementById("buttons").style.display = "none";
     document.getElementById("title").innerHTML = createBackButton(); // cria o botão de retorno
     document.getElementById("title").style.display = "block";
-    document.getElementById("pageTitle").classList.toggle("mt-5");
+    document.getElementById("pageTitle").classList.remove("mt-5");
     document.getElementById("counters").style.display = "block";
     document.getElementById("counterText").style.display = "block";
     document.getElementById("counterText").innerHTML = "<img src='https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/shiny/25.png'>";
