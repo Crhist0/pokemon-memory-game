@@ -129,7 +129,8 @@ function goToSettings() {
     document.getElementById("title").style.display = "block";
     document.getElementById("pageTitle").classList.toggle("mt-5");
     document.getElementById("counterText").style.display = "block";
-    document.getElementById("timerText").style.display = "block";
+    document.getElementById("timerText").style.display = "none";
+    document.getElementById("counters").style.display = "block";
     document.getElementById("counterText").innerHTML = "<img src='https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/shiny/25.png'>";
     document.getElementById("counterText").style.height = "140px";
 }
@@ -185,7 +186,7 @@ function populatePlayArea() {
     document.getElementById("buttons").style.display = "none";
     document.getElementById("pageTitle").classList.toggle("mt-5");
     document.getElementById("title").innerHTML = createBackButton(); // cria o botão de retorno
-    document.getElementById("counters").style.display = "inherit";
+    document.getElementById("counters").style.display = "block";
     document.getElementById("counterText").style.display = "inherit";
     document.getElementById("counterText").style.height = "auto";
     document.getElementById("counterText").innerHTML = `Contador: <span id="counter" class="h4 ms-1"data-count="0">  </span>`;
@@ -337,6 +338,7 @@ function showLeaderboard(x) {
     document.getElementById("title").innerHTML = createBackButton(); // cria o botão de retorno
     document.getElementById("title").style.display = "block";
     document.getElementById("pageTitle").classList.toggle("mt-5");
+    document.getElementById("counters").style.display = "block";
     document.getElementById("counterText").style.display = "block";
     document.getElementById("counterText").innerHTML = "<img src='https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/shiny/25.png'>";
     document.getElementById("counterText").style.height = "140px";
