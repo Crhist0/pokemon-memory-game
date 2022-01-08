@@ -284,7 +284,7 @@ function disableCards() {
                 let name = document.getElementById("nick").value;
                 let count = document.getElementById("counter").dataset.count;
                 let now = new Date();
-                let date = `${now.getDate()}/${now.getMonth()}/${now.getFullYear()}`;
+                let date = `${now.getDate()}/${now.getMonth() + 1}/${now.getFullYear()}`;
                 let time = minutes * 60 + seconds;
 
                 // gameDifficulty
