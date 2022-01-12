@@ -182,6 +182,7 @@ function timer() {
 
 // função que cria os pares de cartas
 function populatePlayArea() {
+    initLoader();
     document.getElementById("playArea").innerHTML = ""; // reseta a playarea porque sim
     document.getElementById("settings").style.display = "none"; // esconde as settings
     document.getElementById("buttons").style.display = "none";
@@ -212,7 +213,10 @@ function populatePlayArea() {
         index++;
     }
     console.log(pkmnsSorteados);
-    startTimer();
+    setTimeout(() => {
+        startTimer();
+        stopLoader();
+    }, 3000);
 }
 
 // função que ativa o efeito "flip", guarda a carta escolhida e ativa a checagem das cartas
@@ -329,6 +333,7 @@ function getRandomInt(min, max) {
 
 // função para mostrar o leaderboard
 function showLeaderboard(x) {
+    initLoader();
     document.getElementById("leaderboardContainer").style.display = "flex";
     document.getElementById("leaderboardEasy").style.display = "block";
     document.getElementById("leaderboardNormal").style.display = "block";
@@ -346,9 +351,15 @@ function showLeaderboard(x) {
 
     printTopLeaderboard();
     if (x == 1) {
-        db.get("/listByTime").then((result) => list(result));
+        db.get("/listByTime").then((result) => {
+            list(result);
+            stopLoader();
+        });
     } else {
-        db.get("/listByPlays").then((result) => list(result));
+        db.get("/listByPlays").then((result) => {
+            list(result);
+            stopLoader();
+        });
     }
 }
 
@@ -452,3 +463,12 @@ let firstCard, secondCard;
 let lockBoard = false;
 let progress = 0;
 let goal = 1;
+
+// loader
+function initLoader() {
+    document.getElementById("loader-wrapper").style.display = "block";
+}
+function stopLoader() {
+    document.getElementById("loader-wrapper").style.display = "none";
+}
+// fim loader
